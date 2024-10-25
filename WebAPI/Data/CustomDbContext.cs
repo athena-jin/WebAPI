@@ -11,10 +11,72 @@ namespace WebAPI.Data
             : base(options)
         {
         }
-
         public DbSet<Actor> Actors { get; set; } = null!;
         public DbSet<Video> Videos { get; set; } = null!;
-        public DbSet<TodoItem> TodoItems { get; set; } = null!;
+        public DbSet<Machine> Machines { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Seed data for Machines
+            modelBuilder.Entity<Machine>().HasData(
+                new Machine
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Machine A",
+                    Address = "192.168.1.10",
+                    Port = 8080,
+                    Status = MachineStatus.Init
+                },
+                new Machine
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Machine B",
+                    Address = "192.168.1.11",
+                    Port = 8081,
+                    Status = MachineStatus.Closed
+                }
+            );
+
+            // Seed data for Actors
+            modelBuilder.Entity<Actor>().HasData(
+                new Actor
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Actor One",
+                    BirthTime = new DateTime(1985, 5, 21)
+                },
+                new Actor
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Actor Two",
+                    BirthTime = new DateTime(1990, 11, 3)
+                }
+            );
+
+            // Seed data for Videos
+            modelBuilder.Entity<Video>().HasData(
+                new Video
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Video One",
+                    ActorId = null // Set to a valid ActorId if necessary
+                },
+                new Video
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Video Two",
+                    ActorId = null
+                }
+            );
+        }
+    }
+    public enum MachineStatus
+    {
+        Init =0,
+        Running = 1,
+        Closed = 2,
     }
     public class Machine
     {
@@ -25,6 +87,7 @@ namespace WebAPI.Data
         public string Name { get; set; }
         public string Address { get; set; }
         public uint Port { get; set; }
+        public MachineStatus Status { get; set; }
     }
     public class TodoItem
     {
