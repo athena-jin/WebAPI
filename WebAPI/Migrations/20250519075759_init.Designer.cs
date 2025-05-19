@@ -11,7 +11,7 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CustomDbContext))]
-    [Migration("20250519052407_init")]
+    [Migration("20250519075759_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -50,7 +50,7 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("87cd681b-2bca-479c-bca1-13d2ce0252b7"),
+                            Id = new Guid("627acde5-94af-49a5-9a96-e072e737e4ea"),
                             Address = "192.168.1.10",
                             ConnectorType = 0,
                             Name = "Machine A",
@@ -59,7 +59,7 @@ namespace WebAPI.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1f7e75ce-f450-45d4-b34b-2a2f0a394d6a"),
+                            Id = new Guid("65484d17-708e-4794-93eb-9636932ab5c9"),
                             Address = "192.168.1.11",
                             ConnectorType = 0,
                             Name = "Machine B",
@@ -68,7 +68,7 @@ namespace WebAPI.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2e9e3c46-c525-4400-a138-96756406540a"),
+                            Id = new Guid("9d3d94b2-e5cc-4b97-8253-0e455197611a"),
                             Address = "opc.tcp://localhost",
                             ConnectorType = 2,
                             Name = "Video One",
@@ -98,16 +98,89 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("470b1d1b-7ef6-4b76-94a4-4fb93432d9cd"),
+                            Id = new Guid("c5d62bfb-865f-4393-a601-103f9c522139"),
                             Name = "admin",
                             Password = "admin"
                         },
                         new
                         {
-                            Id = new Guid("c765e603-d56a-4c40-80de-ec53a808335a"),
+                            Id = new Guid("094c07d2-64d5-4bde-bc8a-14d688bee080"),
                             Name = "Default",
                             Password = "Default"
                         });
+                });
+
+            modelBuilder.Entity("WebAPI.Data.WarningRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MachineId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("WarningLevel")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MachineId");
+
+                    b.ToTable("WarningRecords");
+                });
+
+            modelBuilder.Entity("WebAPI.Data.WarningRecordDetails", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MachineId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WarningLevel")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MachineId");
+
+                    b.ToTable("WarningRecordDetails");
+                });
+
+            modelBuilder.Entity("WebAPI.Data.WarningRecord", b =>
+                {
+                    b.HasOne("WebAPI.Data.Machine", "Machine")
+                        .WithMany()
+                        .HasForeignKey("MachineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Machine");
+                });
+
+            modelBuilder.Entity("WebAPI.Data.WarningRecordDetails", b =>
+                {
+                    b.HasOne("WebAPI.Data.Machine", "Machine")
+                        .WithMany()
+                        .HasForeignKey("MachineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Machine");
                 });
 #pragma warning restore 612, 618
         }

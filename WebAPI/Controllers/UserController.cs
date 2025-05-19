@@ -14,7 +14,6 @@ using WebAPI.Hubs;
 [Route("odata/[controller]")]
 public class UserController : ODataController
 {
-
     private readonly CustomDbContext _context;
     //private readonly IHubContext<User> _hubContext;
 

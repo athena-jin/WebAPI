@@ -2,6 +2,10 @@
 namespace WebAPI.Data
 {
 #nullable disable
+    /// <summary>
+    /// sqlite数据库上下文
+    /// 创建迁移脚本命令  Add-Migration {migrationName
+    /// </summary>
     public class CustomDbContext : DbContext
     {
         public CustomDbContext(DbContextOptions<CustomDbContext> options)
@@ -10,6 +14,9 @@ namespace WebAPI.Data
         }
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Machine> Machines { get; set; } = null!;
+        public DbSet<WarningRecord> WarningRecords { get; set; } = null!;
+
+        public DbSet<WarningRecordDetails> WarningRecordDetails { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

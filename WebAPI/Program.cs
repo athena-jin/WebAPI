@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using WebAPI.Controllers;
 using WebAPI.Data;
 using WebAPI.Hubs;
+using WebAPI.Services;
 
 namespace WebAPI
 {
@@ -59,6 +60,14 @@ namespace WebAPI
                 });
             });
 
+
+            //定时统计前一天和历史预警信息服务
+            builder.Services.AddHostedService<WarningStatisticsService>();
+
+            //每隔5分钟执行一次，创建测试数据
+            builder.Services.AddHostedService<TestDataCreatorService>();
+
+
             var app = builder.Build();
 
             // 自动应用数据库迁移
@@ -101,6 +110,8 @@ namespace WebAPI
                 var modelBuilder = new ODataConventionModelBuilder();
                 modelBuilder.EntitySet<Machine>("Machines");
                 modelBuilder.EntitySet<User>("Users");
+                modelBuilder.EntitySet<WarningRecord>("WarningRecord");
+                modelBuilder.EntitySet<WarningRecordDetails>("WarningRecordDetails");
                 options.AddRouteComponents("odata", modelBuilder.GetEdmModel());
             });
         }

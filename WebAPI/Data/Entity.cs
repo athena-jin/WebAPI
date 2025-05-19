@@ -42,5 +42,40 @@ namespace WebAPI.Data
     {
         public string Password { get; set; }
     }
+    /// <summary>
+    /// 设备异常等级
+    /// </summary>
+    public enum WarningLevel
+    {
+        Nomal = 0,
+        Warning = 1,
+        Error = 2,
+    }
+    /// <summary>
+    /// 设备异常记录
+    /// </summary>
+    public class WarningRecord : Entity
+    {
+        public string Message { get; set; }
+        public DateTime Time { get; set; }
+        public Guid MachineId { get; set; }
+        [ForeignKey("MachineId")]
+        public Machine Machine { get; set; }
+        public WarningLevel WarningLevel { get; set; } = WarningLevel.Nomal;
+    }
+
+
+    /// <summary>
+    /// 设备异常记录统计到天
+    /// </summary>
+    public class WarningRecordDetails : Entity
+    {
+        public DateTime Date { get; set; }
+        public Guid MachineId { get; set; }
+        [ForeignKey("MachineId")]
+        public Machine Machine { get; set; }
+        public WarningLevel WarningLevel { get; set; } = WarningLevel.Nomal;
+        public int TotalCount { get; set; }
+    }
     #endregion
 }
