@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.ModelBuilder;
+using Microsoft.OpenApi.Models;
 using WebAPI.Controllers;
 using WebAPI.Data;
 using WebAPI.Hubs;
@@ -32,6 +33,30 @@ namespace WebAPI
             builder.Services.AddSwaggerGen(options =>
             {
                 options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+
+                // 添加Token验证配置
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "在下方输入令牌：Bearer {your token}",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                   {
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
             var app = builder.Build();
@@ -51,7 +76,8 @@ namespace WebAPI
             }
 
             app.UseHttpsRedirection();
-            app.UseAuthorization();
+
+            app.UseCors("AllowAll");
 
             app.UseRouting();
 
@@ -61,6 +87,8 @@ namespace WebAPI
                 endpoints.MapControllers();
                 endpoints.MapHub<OpcUaHub>("/opcuahub");  // 配置 Hub 路径
             });
+
+            app.UseAuthorization();
 
             app.Run();
         }
@@ -72,8 +100,7 @@ namespace WebAPI
                 options.Select().Expand().Filter().OrderBy().Count().SetMaxTop(100);
                 var modelBuilder = new ODataConventionModelBuilder();
                 modelBuilder.EntitySet<Machine>("Machines");
-                modelBuilder.EntitySet<Actor>("Actors");
-                modelBuilder.EntitySet<Video>("Videos");
+                modelBuilder.EntitySet<User>("Users");
                 options.AddRouteComponents("odata", modelBuilder.GetEdmModel());
             });
         }

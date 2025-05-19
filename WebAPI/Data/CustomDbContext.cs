@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 namespace WebAPI.Data
 {
 #nullable disable
@@ -11,8 +8,7 @@ namespace WebAPI.Data
             : base(options)
         {
         }
-        public DbSet<Actor> Actors { get; set; } = null!;
-        public DbSet<Video> Videos { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
         public DbSet<Machine> Machines { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,41 +32,7 @@ namespace WebAPI.Data
                     Address = "192.168.1.11",
                     Port = 8081,
                     Status = MachineStatus.Closed
-                }
-            );
-
-            // Seed data for Actors
-            modelBuilder.Entity<Actor>().HasData(
-                new Actor
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Actor One",
-                    BirthTime = new DateTime(1985, 5, 21)
                 },
-                new Actor
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Actor Two",
-                    BirthTime = new DateTime(1990, 11, 3)
-                }
-            );
-
-            // Seed data for Videos
-            modelBuilder.Entity<Video>().HasData(
-                new Video
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Video One",
-                    ActorId = null // Set to a valid ActorId if necessary
-                },
-                new Video
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Video Two",
-                    ActorId = null
-                }
-            );
-             modelBuilder.Entity<Machine>().HasData(
                 new Machine
                 {
                     Id = Guid.NewGuid(),
@@ -78,6 +40,22 @@ namespace WebAPI.Data
                     Name = "Video One",
                     Port = 4840,
                     Address = "opc.tcp://localhost" // Set to a valid ActorId if necessary
+                }
+            );
+
+            // Seed data for Actors
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "admin",
+                    Password = "admin"
+                },
+                new User
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Default",
+                    Password = "Default"
                 }
             );
         }

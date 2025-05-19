@@ -11,46 +11,14 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CustomDbContext))]
-    [Migration("20241025080711_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250519052407_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
-
-            modelBuilder.Entity("WebAPI.Data.Actor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("BirthTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Actors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bcfa83f9-435e-4903-a9a0-41a1056f91bd"),
-                            BirthTime = new DateTime(1985, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Actor One"
-                        },
-                        new
-                        {
-                            Id = new Guid("b69d8e13-a56e-41d2-af7a-3628497ce01d"),
-                            BirthTime = new DateTime(1990, 11, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Actor Two"
-                        });
-                });
 
             modelBuilder.Entity("WebAPI.Data.Machine", b =>
                 {
@@ -59,7 +27,11 @@ namespace WebAPI.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("ConnectorType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -78,60 +50,64 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b65af4e8-8ff7-4dd1-9f95-6078e27c9e42"),
+                            Id = new Guid("87cd681b-2bca-479c-bca1-13d2ce0252b7"),
                             Address = "192.168.1.10",
+                            ConnectorType = 0,
                             Name = "Machine A",
                             Port = 8080u,
                             Status = 0
                         },
                         new
                         {
-                            Id = new Guid("4bb8e41e-26db-4257-af34-621989e7ebd2"),
+                            Id = new Guid("1f7e75ce-f450-45d4-b34b-2a2f0a394d6a"),
                             Address = "192.168.1.11",
+                            ConnectorType = 0,
                             Name = "Machine B",
                             Port = 8081u,
                             Status = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("2e9e3c46-c525-4400-a138-96756406540a"),
+                            Address = "opc.tcp://localhost",
+                            ConnectorType = 2,
+                            Name = "Video One",
+                            Port = 4840u,
+                            Status = 0
                         });
                 });
 
-            modelBuilder.Entity("WebAPI.Data.Video", b =>
+            modelBuilder.Entity("WebAPI.Data.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ActorId")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActorId");
-
-                    b.ToTable("Videos");
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("aaf5c9cd-52bd-4583-b245-f1cabb1bdb06"),
-                            Name = "Video One"
+                            Id = new Guid("470b1d1b-7ef6-4b76-94a4-4fb93432d9cd"),
+                            Name = "admin",
+                            Password = "admin"
                         },
                         new
                         {
-                            Id = new Guid("2225e305-a5ff-468b-bf9e-8cb1344cf3df"),
-                            Name = "Video Two"
+                            Id = new Guid("c765e603-d56a-4c40-80de-ec53a808335a"),
+                            Name = "Default",
+                            Password = "Default"
                         });
-                });
-
-            modelBuilder.Entity("WebAPI.Data.Video", b =>
-                {
-                    b.HasOne("WebAPI.Data.Actor", "Actor")
-                        .WithMany()
-                        .HasForeignKey("ActorId");
-
-                    b.Navigation("Actor");
                 });
 #pragma warning restore 612, 618
         }

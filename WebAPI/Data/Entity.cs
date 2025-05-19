@@ -38,29 +38,9 @@ namespace WebAPI.Data
         [NotMapped]
         public string? Details { get; set; }
     }
-    /// <summary>
-    /// 可能需要jsonx的序列化规则
-    /// </summary>
-    public class MachineDetails
+    public class User : NameEntity
     {
-    }
-    public class Video : NameEntity
-    {
-        public Guid? ActorId { get; set; }
-        [ForeignKey(nameof(ActorId))]
-        public Actor Actor { get; set; }
-    }
-    public class Actor : NameEntity
-    {
-        [NotMapped]
-        public int Age
-        {
-            get
-            {
-                return DateTime.UtcNow.Year - BirthTime.Year;
-            }
-        }
-        public DateTime BirthTime { get; set; }
+        public string Password { get; set; }
     }
     #endregion
 }

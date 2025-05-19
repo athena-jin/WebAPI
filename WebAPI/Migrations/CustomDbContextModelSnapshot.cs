@@ -17,38 +17,6 @@ namespace WebAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
-            modelBuilder.Entity("WebAPI.Data.Actor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("BirthTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Actors");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("c4e2e6dc-ce2f-424d-a5c4-d7b1c64f9a2b"),
-                            BirthTime = new DateTime(1985, 5, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Actor One"
-                        },
-                        new
-                        {
-                            Id = new Guid("22377d34-8fe0-4feb-b3f7-d58cd0a44196"),
-                            BirthTime = new DateTime(1990, 11, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Actor Two"
-                        });
-                });
-
             modelBuilder.Entity("WebAPI.Data.Machine", b =>
                 {
                     b.Property<Guid>("Id")
@@ -79,7 +47,7 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9be31da9-e66e-48d2-a613-dc0aa7757aab"),
+                            Id = new Guid("87cd681b-2bca-479c-bca1-13d2ce0252b7"),
                             Address = "192.168.1.10",
                             ConnectorType = 0,
                             Name = "Machine A",
@@ -88,7 +56,7 @@ namespace WebAPI.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f49b9b89-3372-4852-8e8d-e3a8905671dd"),
+                            Id = new Guid("1f7e75ce-f450-45d4-b34b-2a2f0a394d6a"),
                             Address = "192.168.1.11",
                             ConnectorType = 0,
                             Name = "Machine B",
@@ -97,7 +65,7 @@ namespace WebAPI.Migrations
                         },
                         new
                         {
-                            Id = new Guid("7c822da6-330c-4948-8261-894f9658b0cd"),
+                            Id = new Guid("2e9e3c46-c525-4400-a138-96756406540a"),
                             Address = "opc.tcp://localhost",
                             ConnectorType = 2,
                             Name = "Video One",
@@ -106,45 +74,37 @@ namespace WebAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WebAPI.Data.Video", b =>
+            modelBuilder.Entity("WebAPI.Data.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("ActorId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ActorId");
-
-                    b.ToTable("Videos");
+                    b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1564043c-4b5d-46d4-9d1d-09fba4b73dc0"),
-                            Name = "Video One"
+                            Id = new Guid("470b1d1b-7ef6-4b76-94a4-4fb93432d9cd"),
+                            Name = "admin",
+                            Password = "admin"
                         },
                         new
                         {
-                            Id = new Guid("5433e5f8-dac4-4948-8cb7-99921d22adf0"),
-                            Name = "Video Two"
+                            Id = new Guid("c765e603-d56a-4c40-80de-ec53a808335a"),
+                            Name = "Default",
+                            Password = "Default"
                         });
-                });
-
-            modelBuilder.Entity("WebAPI.Data.Video", b =>
-                {
-                    b.HasOne("WebAPI.Data.Actor", "Actor")
-                        .WithMany()
-                        .HasForeignKey("ActorId");
-
-                    b.Navigation("Actor");
                 });
 #pragma warning restore 612, 618
         }
