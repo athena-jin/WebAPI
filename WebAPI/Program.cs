@@ -65,7 +65,7 @@ namespace WebAPI
             builder.Services.AddHostedService<WarningStatisticsService>();
 
             //每隔5分钟执行一次，创建测试数据
-            builder.Services.AddHostedService<TestDataCreatorService>();
+            //builder.Services.AddHostedService<TestDataCreatorService>();
 
 
             var app = builder.Build();

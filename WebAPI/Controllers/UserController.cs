@@ -1,25 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
+using WebAPI.Controllers;
 using WebAPI.Data;
 using WebAPI.Filters;
-using WebAPI.Hubs;
 
 /// <summary>
 /// 登录控制器
 /// </summary>
 [ApiController]
 [Route("odata/[controller]")]
-public class UserController : ODataController
+public class UserController : ODataControllerBase<User>
 {
-    private readonly CustomDbContext _context;
-    //private readonly IHubContext<User> _hubContext;
-
-    public UserController(CustomDbContext context/*, IHubContext<User> hubContext*/)
+    public UserController(CustomDbContext context/*, IHubContext<User> hubContext*/):base(context)
     {
-        _context = context;
         //_hubContext = hubContext;
     }
     //已登录的令牌集合
@@ -31,21 +25,14 @@ public class UserController : ODataController
         return Tokens.TryGetValue(token, out user);
     }
 
-    private IEnumerable<User> Get()
-    {
-        return _context.Users;
-    }
-
-
     /// <summary>
     /// 获取所有用户名
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [TokenAuth]
-    public IActionResult Query()
+    public override IActionResult Get()
     {
-        return Ok(Get().Select(_ => _.Name));
+        return Ok(GetEntities().Select(_ => _.Name));
     }
 
     /// <summary>
@@ -61,7 +48,7 @@ public class UserController : ODataController
         {
             return BadRequest($"用户 {user.Name} 已登录，请先退出");
         }
-        var users = Get();
+        var users = GetEntities();
 
         if (users.FirstOrDefault(_ => _.Name == user.Name) is User t_user)
         {
@@ -94,7 +81,7 @@ public class UserController : ODataController
         {
             return BadRequest($"用户 {name} 已登录，请先退出");
         }
-        var users = Get();
+        var users = GetEntities();
 
         if (users.FirstOrDefault(_ => _.Name == name) is User t_user)
         {
@@ -117,7 +104,7 @@ public class UserController : ODataController
     /// 注销
     /// </summary>
     /// <returns></returns>
-    [HttpPost("Logout/{name}")]
+    [HttpPost("Logout")]
     [TokenAuth]
     public IActionResult Logout([FromHeader(Name = "Authorization")] Guid token)
     {
@@ -127,6 +114,7 @@ public class UserController : ODataController
         }
         return BadRequest("令牌无效或用户未登录");
     }
+
 
     /// <summary>
     /// 删除指定实体
@@ -138,9 +126,9 @@ public class UserController : ODataController
     public IActionResult Delete(string name)
     {
         //此处需要判断是否在登录中
-        var user = _context.Users.FirstOrDefault(_ => _.Name == name);
-        var result = _context.Users.Remove(user);
-        _context.SaveChanges();
+        var user = Context.Users.FirstOrDefault(_ => _.Name == name);
+        var result = Context.Users.Remove(user);
+        Context.SaveChanges();
         return Ok();
     }
     /// <summary>
@@ -153,12 +141,12 @@ public class UserController : ODataController
     public IActionResult Add([FromBody] User user)
     {
         //检查是否已存在
-        if (Get().Any(_ => _.Name == user.Name))
+        if (GetEntities().Any(_ => _.Name == user.Name))
         {
             return BadRequest($"用户 {user.Name} 已存在");
         }
-        var result = _context.Users.Add(user);
-        _context.SaveChanges();
+        var result = Context.Users.Add(user);
+        Context.SaveChanges();
         return Ok(user.Name);
     }
     /// <summary>
@@ -170,17 +158,17 @@ public class UserController : ODataController
     [TokenAuth]
     public IActionResult Update([FromBody] User user)
     {
-        var t_user = Get().FirstOrDefault(_ => _.Name == user.Name);
+        var t_user = GetEntities().FirstOrDefault(_ => _.Name == user.Name);
         if (t_user == null)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            Context.Users.Add(user);
+            Context.SaveChanges();
             return Ok(user.Name);
         }
         t_user.Password = user.Password;
-        var result = _context.Users.Update(t_user);
+        var result = Context.Users.Update(t_user);
 
-        _context.SaveChanges();
+        Context.SaveChanges();
         return Ok(t_user.Name);
     }
 }

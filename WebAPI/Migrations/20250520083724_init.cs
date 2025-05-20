@@ -89,9 +89,9 @@ namespace WebAPI.Migrations
                 columns: new[] { "Id", "Address", "ConnectorType", "Name", "Port", "Status" },
                 values: new object[,]
                 {
-                    { new Guid("627acde5-94af-49a5-9a96-e072e737e4ea"), "192.168.1.10", 0, "Machine A", 8080u, 0 },
-                    { new Guid("65484d17-708e-4794-93eb-9636932ab5c9"), "192.168.1.11", 0, "Machine B", 8081u, 2 },
-                    { new Guid("9d3d94b2-e5cc-4b97-8253-0e455197611a"), "opc.tcp://localhost", 2, "Video One", 4840u, 0 }
+                    { new Guid("7a5e700a-45b9-4320-80a4-48e0af766bfa"), "opc.tcp://localhost", 2, "Video One", 4840u, 0 },
+                    { new Guid("e78e2c10-1679-4de9-ac77-35eb9c127803"), "192.168.1.11", 0, "Machine B", 8081u, 2 },
+                    { new Guid("eee48de2-5afd-481d-9f4d-c5b9236f48f6"), "192.168.1.10", 0, "Machine A", 8080u, 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -99,8 +99,8 @@ namespace WebAPI.Migrations
                 columns: new[] { "Id", "Name", "Password" },
                 values: new object[,]
                 {
-                    { new Guid("094c07d2-64d5-4bde-bc8a-14d688bee080"), "Default", "Default" },
-                    { new Guid("c5d62bfb-865f-4393-a601-103f9c522139"), "admin", "admin" }
+                    { new Guid("690545c7-f0a5-494c-94c5-9aa9c4dc2854"), "Default", "Default" },
+                    { new Guid("ddee17be-bbcd-4ded-8cf2-f2123c05770c"), "admin", "admin" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -11,7 +11,7 @@ using WebAPI.Data;
 namespace WebAPI.Migrations
 {
     [DbContext(typeof(CustomDbContext))]
-    [Migration("20250519075759_init")]
+    [Migration("20250520083724_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -50,7 +50,7 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("627acde5-94af-49a5-9a96-e072e737e4ea"),
+                            Id = new Guid("eee48de2-5afd-481d-9f4d-c5b9236f48f6"),
                             Address = "192.168.1.10",
                             ConnectorType = 0,
                             Name = "Machine A",
@@ -59,7 +59,7 @@ namespace WebAPI.Migrations
                         },
                         new
                         {
-                            Id = new Guid("65484d17-708e-4794-93eb-9636932ab5c9"),
+                            Id = new Guid("e78e2c10-1679-4de9-ac77-35eb9c127803"),
                             Address = "192.168.1.11",
                             ConnectorType = 0,
                             Name = "Machine B",
@@ -68,7 +68,7 @@ namespace WebAPI.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9d3d94b2-e5cc-4b97-8253-0e455197611a"),
+                            Id = new Guid("7a5e700a-45b9-4320-80a4-48e0af766bfa"),
                             Address = "opc.tcp://localhost",
                             ConnectorType = 2,
                             Name = "Video One",
@@ -98,13 +98,13 @@ namespace WebAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c5d62bfb-865f-4393-a601-103f9c522139"),
+                            Id = new Guid("ddee17be-bbcd-4ded-8cf2-f2123c05770c"),
                             Name = "admin",
                             Password = "admin"
                         },
                         new
                         {
-                            Id = new Guid("094c07d2-64d5-4bde-bc8a-14d688bee080"),
+                            Id = new Guid("690545c7-f0a5-494c-94c5-9aa9c4dc2854"),
                             Name = "Default",
                             Password = "Default"
                         });

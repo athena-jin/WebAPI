@@ -1,31 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Routing.Controllers;
 using WebAPI.Data;
 using Microsoft.AspNetCore.SignalR;
 using WebAPI.Hubs;
 
 namespace WebAPI.Controllers;
-[Route("odata/Machines")]
-public class MachinesController : ODataController
+[Route("odata/[controller]")]
+public class MachinesController : ODataControllerBase<Machine>
 {
-    private readonly CustomDbContext _context;
     private readonly IHubContext<OpcUaHub> _hubContext;
 
-    public MachinesController(CustomDbContext context, IHubContext<OpcUaHub> hubContext)
+    public MachinesController(CustomDbContext context, IHubContext<OpcUaHub> hubContext):base(context)
     {
-        _context = context;
         _hubContext = hubContext;
-    }
-
-    [HttpGet]
-    public IActionResult Get()
-    {
-        return Ok(_context.Machines);
     }
     [HttpPost("{key}/Connect")]
     public async Task<IActionResult> Connect([FromRoute] Guid key)
     {
-        var machine = _context.Machines.Find(key);
+        var machine = Context.Machines.Find(key);
         if (machine == null)
         {
             return NotFound();
@@ -42,7 +33,7 @@ public class MachinesController : ODataController
     [HttpGet("{key}/Details")]
     public IActionResult Details([FromRoute] Guid key)
     {
-        var machine = _context.Machines.Find(key);
+        var machine = Context.Machines.Find(key);
         if (machine?.Details == null)
         {
             return NotFound();
@@ -53,7 +44,7 @@ public class MachinesController : ODataController
     [HttpGet("{key}")]
     public IActionResult Get([FromRoute] Guid key)
     {
-        var machine = _context.Machines.Find(key);
+        var machine = Context.Machines.Find(key);
         if (machine == null)
         {
             return NotFound();
@@ -64,7 +55,7 @@ public class MachinesController : ODataController
     [HttpPost("{key}/Open")]
     public async Task<IActionResult> Open([FromRoute]Guid key)
     {
-        var machine = _context.Machines.Find(key);
+        var machine = Context.Machines.Find(key);
         if (machine == null)
         {
             return NotFound();
@@ -75,14 +66,14 @@ public class MachinesController : ODataController
         }
         await machine.Client.ConnectAsync();
         machine.Status = MachineStatus.Running;
-        _context.SaveChanges();
+        Context.SaveChanges();
         return Ok(machine.Status);
     }
 
     [HttpPost("{key}/Close")]
     public IActionResult Close([FromRoute] Guid key)
     {
-        var machine = _context.Machines.Find(key);
+        var machine = Context.Machines.Find(key);
         if (machine == null)
         {
             return NotFound();
@@ -92,7 +83,7 @@ public class MachinesController : ODataController
         if (machine.Status == MachineStatus.Running)
         {
             machine.Status = MachineStatus.Closed;
-            _context.SaveChanges();
+            Context.SaveChanges();
         }
 
         return Ok(machine);

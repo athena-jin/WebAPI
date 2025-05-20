@@ -58,7 +58,7 @@ public class WarningStatisticsService : BackgroundService
 
         dates = dates.Distinct();
 
-        var records = context.WarningRecords.Where(_ => _.Time <= yesterday &&! dates.Contains(_.Time.Date));
+        var records = context.WarningRecords.Where(_ => _.Time <= yesterday &&! dates.Contains(_.Time.Date)).ToList();
 
         if (records != null && records.Count() != 0)
         {
@@ -71,19 +71,19 @@ public class WarningStatisticsService : BackgroundService
                     .GroupBy(w => new
                     {
                         w.WarningLevel,
-                        w.Machine,
+                        w.MachineId,
                     })
                     .Select(warningGroup => new WarningRecordDetails
                     {
                         Date = group.Key,
                         WarningLevel = warningGroup.Key.WarningLevel,
-                        Machine = warningGroup.Key.Machine,
+                        MachineId = warningGroup.Key.MachineId,
                         TotalCount = warningGroup.Count()
                     });
 
                 if (groupedWarnings.Any())
                 {
-                    context.WarningRecordDetails.AddRange(groupedWarnings.ToArray());
+                    context.WarningRecordDetails.AddRange(groupedWarnings);
                     await context.SaveChangesAsync();
                     Console.WriteLine($"缺陷记录，日期：{group.Key:yyyy-MM-dd} 已统计");
                 }

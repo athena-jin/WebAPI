@@ -56,7 +56,7 @@ namespace WebAPI.Data
     /// </summary>
     public class WarningRecord : Entity
     {
-        public string Message { get; set; }
+        public string Message { get; set; } = "";
         public DateTime Time { get; set; }
         public Guid MachineId { get; set; }
         [ForeignKey("MachineId")]

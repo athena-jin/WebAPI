@@ -9,7 +9,7 @@ namespace WebAPI.Services;
 /// </summary>
 public class TestDataCreatorService : BackgroundService
 {
-    private DateTime CurrentDay = DateTime.Now.AddMonths(-1);
+    //private DateTime CurrentDay = DateTime.Now.AddMonths(-1);
 
     private readonly IServiceProvider _serviceProvider;
     public TestDataCreatorService(IServiceProvider serviceProvider)
@@ -23,7 +23,7 @@ public class TestDataCreatorService : BackgroundService
         {
             //凌晨12点后执行
             var now = DateTime.Now;
-            //5分钟执行一次
+            //1分钟执行一次
             var delay = TimeSpan.FromMinutes(1);
 
             await Task.Delay(delay, stoppingToken);
@@ -37,6 +37,7 @@ public class TestDataCreatorService : BackgroundService
 
     private async Task DoWork(CancellationToken stoppingToken)
     {
+        Console.WriteLine("创建测试数据");
         using var scope = _serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<CustomDbContext>();
         var machines = context.Machines;
@@ -49,15 +50,17 @@ public class TestDataCreatorService : BackgroundService
         {
             WarningRecord details = new WarningRecord()
             {
-                Time = DateTime.Now,
+                Time = DateTime.Now.AddDays(random.Next(-10, -1)),
                 WarningLevel = (WarningLevel)(random.Next(0, 2)),
                 Machine = machines.ElementAt(random.Next(0, machinesCount - 1))
             };
-            CurrentDay = CurrentDay.AddDays(1);
+            //CurrentDay = CurrentDay.AddDays(1);
             records.Add(details);
         }
         await context.WarningRecords.AddRangeAsync(records.ToArray());
         await context.SaveChangesAsync();
+
+        Console.WriteLine($"创建测试数据{records.Count}条");
     }
 }
 

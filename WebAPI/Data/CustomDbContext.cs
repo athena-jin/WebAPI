@@ -4,7 +4,7 @@ namespace WebAPI.Data
 #nullable disable
     /// <summary>
     /// sqlite数据库上下文
-    /// 创建迁移脚本命令  Add-Migration {migrationName
+    /// 创建迁移脚本命令  Add-Migration {migrationName}
     /// </summary>
     public class CustomDbContext : DbContext
     {
@@ -26,6 +26,7 @@ namespace WebAPI.Data
             modelBuilder.Entity<Machine>().HasData(
                 new Machine
                 {
+                    //此处id没有固定导致下一次启动的时候machine外键没有对应的数据
                     Id = Guid.NewGuid(),
                     Name = "Machine A",
                     Address = "192.168.1.10",
