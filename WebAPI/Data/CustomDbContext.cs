@@ -1,62 +1,71 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 namespace WebAPI.Data
 {
 #nullable disable
+    /// <summary>
+    /// sqlite数据库上下文
+    /// 创建迁移脚本命令  Add-Migration {migrationName}
+    /// </summary>
     public class CustomDbContext : DbContext
     {
         public CustomDbContext(DbContextOptions<CustomDbContext> options)
             : base(options)
         {
         }
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Machine> Machines { get; set; } = null!;
+        public DbSet<WarningRecord> WarningRecords { get; set; } = null!;
 
-        public DbSet<Actor> Actors { get; set; } = null!;
-        public DbSet<Video> Videos { get; set; } = null!;
-        public DbSet<TodoItem> TodoItems { get; set; } = null!;
-    }
-    public class Machine
-    {
+        public DbSet<WarningRecordDetails> WarningRecordDetails { get; set; } = null!;
 
-        [Key]
-        public Guid Id { get; set; }
-        [NotNull]
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public uint Port { get; set; }
-    }
-    public class TodoItem
-    {
-        [Key]
-        public Guid Id { get; set; }
-        [NotNull]
-        public string Name { get; set; }
-        public bool IsComplete { get; set; }
-    }
-    public class Video
-    {
-        [Key]
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public Guid? ActorId { get; set; }
-        [ForeignKey(nameof(ActorId))]
-        public Actor Actor { get; set; }
-    }
-    public class Actor
-    {
-        [Key]
-        public Guid Id { get; set; }
-        [NotNull]
-        public string Name { get; set; }
-        [NotMapped]
-        public int Age
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            get
-            {
-                return DateTime.UtcNow.Year - BirthTime.Year;
-            }
+            base.OnModelCreating(modelBuilder);
+
+            // Seed data for Machines
+            modelBuilder.Entity<Machine>().HasData(
+                new Machine
+                {
+                    //此处id没有固定导致下一次启动的时候machine外键没有对应的数据
+                    Id = Guid.NewGuid(),
+                    Name = "Machine A",
+                    Address = "192.168.1.10",
+                    Port = 8080,
+                    Status = MachineStatus.Init
+                },
+                new Machine
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Machine B",
+                    Address = "192.168.1.11",
+                    Port = 8081,
+                    Status = MachineStatus.Closed
+                },
+                new Machine
+                {
+                    Id = Guid.NewGuid(),
+                    ConnectorType = MachineConnectorType.OPC_UA,
+                    Name = "Video One",
+                    Port = 4840,
+                    Address = "opc.tcp://localhost" // Set to a valid ActorId if necessary
+                }
+            );
+
+            // Seed data for Actors
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "admin",
+                    Password = "admin"
+                },
+                new User
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Default",
+                    Password = "Default"
+                }
+            );
         }
-        public DateTime BirthTime { get; set; }
     }
 }
